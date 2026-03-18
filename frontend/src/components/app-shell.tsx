@@ -42,7 +42,7 @@ export function AppShell({
   headerLeading,
   headerContent,
 }: AppShellProps) {
-  const { theme, setTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
   const { logout, session } = useAppState()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const visibleNavItems = navItems.filter((item) =>
@@ -59,10 +59,10 @@ export function AppShell({
       }
     }),
     {
-      title: theme === "dark" ? "浅色模式" : "深色模式",
-      onClick: () => setTheme(theme === "dark" ? "light" : "dark"),
+      title: resolvedTheme === "dark" ? "浅色模式" : "深色模式",
+      onClick: () => setTheme(resolvedTheme === "dark" ? "light" : "dark"),
       icon:
-        theme === "dark" ? (
+        resolvedTheme === "dark" ? (
           <SunMedium className="h-full w-full text-current" />
         ) : (
           <MoonStar className="h-full w-full text-current" />
@@ -106,15 +106,17 @@ export function AppShell({
                 <div className="ml-auto flex items-center gap-2 md:hidden">
                   <button
                     type="button"
-                    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                    onClick={() =>
+                      setTheme(resolvedTheme === "dark" ? "light" : "dark")
+                    }
                     className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-2 text-xs font-medium text-secondary-foreground transition hover:bg-accent hover:text-accent-foreground"
                   >
-                    {theme === "dark" ? (
+                    {resolvedTheme === "dark" ? (
                       <SunMedium className="h-3.5 w-3.5" />
                     ) : (
                       <MoonStar className="h-3.5 w-3.5" />
                     )}
-                    <span>{theme === "dark" ? "Light" : "Dark"}</span>
+                    <span>{resolvedTheme === "dark" ? "Light" : "Dark"}</span>
                   </button>
                   <Button
                     variant="outline"

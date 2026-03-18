@@ -78,7 +78,7 @@ type DotPoint = {
   opacity: number
 }
 
-const DotMap = () => {
+const DotMap = ({ dark }: { dark: boolean }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
 
@@ -87,25 +87,25 @@ const DotMap = () => {
       {
         start: { x: 100, y: 150, delay: 0 },
         end: { x: 200, y: 80, delay: 2 },
-        color: "#2563eb",
+        color: dark ? "rgba(125, 142, 166, 0.52)" : "rgba(99, 124, 167, 0.34)",
       },
       {
         start: { x: 200, y: 80, delay: 2 },
         end: { x: 260, y: 120, delay: 4 },
-        color: "#2563eb",
+        color: dark ? "rgba(125, 142, 166, 0.52)" : "rgba(99, 124, 167, 0.34)",
       },
       {
         start: { x: 50, y: 50, delay: 1 },
         end: { x: 150, y: 180, delay: 3 },
-        color: "#2563eb",
+        color: dark ? "rgba(125, 142, 166, 0.52)" : "rgba(99, 124, 167, 0.34)",
       },
       {
         start: { x: 280, y: 60, delay: 0.5 },
         end: { x: 180, y: 180, delay: 2.5 },
-        color: "#2563eb",
+        color: dark ? "rgba(125, 142, 166, 0.52)" : "rgba(99, 124, 167, 0.34)",
       },
     ],
-    [],
+    [dark],
   )
 
   useEffect(() => {
@@ -187,7 +187,9 @@ const DotMap = () => {
       dots.forEach((dot) => {
         ctx.beginPath()
         ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(37, 99, 235, ${dot.opacity})`
+        ctx.fillStyle = dark
+          ? `rgba(148, 163, 184, ${dot.opacity * 0.62})`
+          : `rgba(100, 116, 139, ${dot.opacity * 0.46})`
         ctx.fill()
       })
     }
@@ -210,19 +212,19 @@ const DotMap = () => {
 
         ctx.beginPath()
         ctx.arc(route.end.x, route.end.y, 3, 0, Math.PI * 2)
-        ctx.fillStyle = "#3b82f6"
+        ctx.fillStyle = dark ? "rgba(191, 219, 254, 0.72)" : "rgba(148, 163, 184, 0.7)"
         ctx.fill()
 
         ctx.beginPath()
         ctx.arc(route.end.x, route.end.y, 6, 0, Math.PI * 2)
-        ctx.fillStyle = "rgba(59, 130, 246, 0.18)"
+        ctx.fillStyle = dark ? "rgba(148, 163, 184, 0.14)" : "rgba(148, 163, 184, 0.12)"
         ctx.fill()
       })
     }
 
     drawDots()
     drawRoutes()
-  }, [dimensions, dots, routes])
+  }, [dark, dimensions, dots, routes])
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -240,9 +242,10 @@ export const TravelConnectSignIn = ({
   onSubmit,
   onGuestLogin,
 }: TravelSigninProps) => {
-  const { theme, setTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
+  const isDark = resolvedTheme === "dark"
 
   return (
     <div className="flex h-full w-full items-center justify-center">
@@ -253,25 +256,113 @@ export const TravelConnectSignIn = ({
         className="flex w-full max-w-4xl overflow-hidden rounded-2xl border border-white/50 bg-white/90 shadow-xl backdrop-blur-md dark:border-slate-700/70 dark:bg-slate-950/90"
       >
         <div className="relative hidden h-[600px] w-1/2 overflow-hidden border-r border-gray-100 dark:border-slate-800 md:block">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950">
-            <DotMap />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#f5f9ff] via-[#e9f1ff] to-[#dce9ff] backdrop-blur-[2px] dark:from-[#06101f] dark:via-[#11214a] dark:to-[#19356d]">
+            <motion.div
+              aria-hidden="true"
+              className="absolute left-[10%] top-[9%] size-44 rounded-full bg-blue-400/24 blur-3xl dark:bg-blue-500/22"
+              animate={{
+                x: [0, 24, -12, 0],
+                y: [0, -18, 10, 0],
+                scale: [1, 1.1, 0.96, 1],
+                opacity: [0.72, 0.98, 0.78, 0.72],
+              }}
+              transition={{
+                duration: 13,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+            <motion.div
+              aria-hidden="true"
+              className="absolute bottom-[7%] right-[10%] size-52 rounded-full bg-cyan-300/22 blur-3xl dark:bg-indigo-500/22"
+              animate={{
+                x: [0, -26, 14, 0],
+                y: [0, 18, -14, 0],
+                scale: [1, 0.94, 1.08, 1],
+                opacity: [0.68, 0.9, 0.76, 0.68],
+              }}
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.66),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(125,211,252,0.26),transparent_34%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(96,165,250,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(129,140,248,0.24),transparent_36%)]" />
+            <DotMap dark={isDark} />
 
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-8">
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
-                className="mb-6"
+                className="relative mb-6"
               >
-                <div className="flex h-24 w-24 items-center justify-center rounded-full ">
-                  <img src="logo.svg" alt="" />
-                </div>
+                <motion.div
+                  aria-hidden="true"
+                  className="absolute inset-[-18px] rounded-[34px] bg-primary/10 blur-2xl"
+                  animate={{
+                    scale: [0.94, 1.12, 0.96, 0.94],
+                    opacity: [0.22, 0.56, 0.26, 0.22],
+                  }}
+                  transition={{
+                    scale: {
+                      duration: 4.8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    },
+                    opacity: {
+                      duration: 4.8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    },
+                  }}
+                />
+                <motion.div
+                  aria-hidden="true"
+                  className="absolute inset-[-8px] rounded-[30px] border border-white/35 bg-white/16 blur-md dark:border-white/8 dark:bg-white/[0.03]"
+                  animate={{
+                    opacity: [0.14, 0.34, 0.14],
+                    scale: [0.98, 1.06, 0.98],
+                  }}
+                  transition={{
+                    duration: 4.6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+                <motion.div
+                  className="relative flex size-24 items-center justify-center rounded-[28px] border border-white/70 bg-white/78 shadow-xl shadow-black/8 backdrop-blur dark:border-white/10 dark:bg-slate-950/74 dark:shadow-black/28"
+                  animate={{
+                    y: [0, -8, 0],
+                    rotate: [0, -2, 0, 2, 0],
+                    scale: [1, 1.04, 1],
+                  }}
+                  transition={{
+                    duration: 4.8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <motion.img
+                    src="logo.svg"
+                    alt=""
+                    className="size-14"
+                    animate={{
+                      scale: [1, 1.06, 1],
+                    }}
+                    transition={{
+                      duration: 4.8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                </motion.div>
               </motion.div>
               <motion.h2
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, duration: 0.5 }}
-                className="mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-center text-3xl font-bold text-transparent dark:from-blue-300 dark:to-indigo-300"
+                className="mb-2 text-center text-3xl font-semibold tracking-[-0.05em] text-foreground"
               >
                 Free Mail
               </motion.h2>
@@ -279,7 +370,7 @@ export const TravelConnectSignIn = ({
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.5 }}
-                className="max-w-xs text-center text-sm text-gray-600 dark:text-slate-300"
+                className="max-w-xs text-center text-sm leading-6 text-muted-foreground"
               >
                 Sign in to access your domain email dashboard and connect with everywhere
               </motion.p>
@@ -304,11 +395,17 @@ export const TravelConnectSignIn = ({
               </div>
               <button
                 type="button"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                onClick={() =>
+                  setTheme(resolvedTheme === "dark" ? "light" : "dark")
+                }
                 className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
               >
-                {theme === "dark" ? <SunMedium size={14} /> : <MoonStar size={14} />}
-                {theme === "dark" ? "Light" : "Dark"}
+                {resolvedTheme === "dark" ? (
+                  <SunMedium size={14} />
+                ) : (
+                  <MoonStar size={14} />
+                )}
+                {resolvedTheme === "dark" ? "Light" : "Dark"}
               </button>
             </div>
 

@@ -59,7 +59,7 @@ export function LoginPage() {
   }
 
   return (
-    <main className="relative h-screen w-screen overflow-hidden bg-slate-950">
+    <main className="relative h-screen w-screen overflow-hidden bg-background transition-colors duration-300">
       <BackgroundShader />
       <div className="relative z-10 flex h-full w-full items-center justify-center p-4">
         <TravelConnectSignIn
