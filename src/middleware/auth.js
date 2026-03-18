@@ -287,7 +287,7 @@ export async function authMiddleware(context) {
     return null;
   }
 
-  const JWT_TOKEN = env.JWT_TOKEN || env.JWT_SECRET || '';
+  const JWT_TOKEN = String(env.JWT_TOKEN || env.JWT_SECRET || '').trim();
   const root = checkRootAdminOverride(request, JWT_TOKEN);
   if (root) {
     context.authPayload = root;
