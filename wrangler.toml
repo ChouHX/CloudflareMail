@@ -1,4 +1,4 @@
-name = "freemail"
+name = "cloudflaremail"
 main = "src/server.js"
 compatibility_date = "2026-03-18"
 
